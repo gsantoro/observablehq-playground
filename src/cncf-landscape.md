@@ -97,7 +97,11 @@ const chosenCategory = view(
 ```
 
 ```sql id=projects_with_chosen_category
-SELECT name, gh_stars, category || ' > ' || subcategory as category
+SELECT 
+  name, 
+  homepage_url,
+  gh_stars, 
+  category || ' > ' || subcategory as category
   FROM landscape 
  WHERE category || ' > ' || subcategory = ${chosenCategory}
  and gh_stars > 0
