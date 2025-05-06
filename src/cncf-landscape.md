@@ -56,7 +56,7 @@ Inputs.table(search_all_projects_with_stars.map(d => ({link: [d.name, d.homepage
 ## Search projects by their category
 In this section we can search a project by the category/subcategory it belongs to.
 
-```sql id=categories_with_gh_stars
+```sql id=categories_with_gh_stars display
 select concat(category, ' > ', subcategory) as category, count(*) as items
 from landscape
 where gh_stars > 0
