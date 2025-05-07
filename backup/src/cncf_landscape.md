@@ -99,3 +99,27 @@ viewof chosenCategory = Inputs.text({
 --  and gh_stars > 0
 --  ORDER BY gh_stars desc
 ```
+
+
+
+```js hide
+Plot.plot({
+  marginLeft: 350,
+  x: {
+    grid: true,
+    label: "Number of Items"
+  },
+  y: {
+    label: null
+  },
+  marks: [
+    Plot.barX(categories_with_gh_stars, {
+      y: "category",
+      x: "items",
+      sort: {y: "-x"},
+      fill: "steelblue",
+    }),
+    Plot.tip(categories_with_gh_stars, Plot.pointerX({x: "items", y: "category"}))
+  ]
+})
+```

@@ -1,6 +1,6 @@
 ---
 sql:
-  landscape: ./data/landscape.parquet
+  landscape: ./data/cncf-landscape.parquet
 ---
 
 # CNCF landscape
@@ -23,12 +23,12 @@ order by gh_stars desc
 ```js
 const search_all_projects_with_stars = view(
   Inputs.search(all_projects_with_stars, {
-    placeholder: "Search projects all fields...",
+    placeholder: "Search projects by all fields...",
   }));
 ```
 
 ```js 
-Inputs.table(search_all_projects_with_stars.map(d => ({link: [d.name, d.homepage_url], ...d})), {
+Inputs.table(search_all_projects_with_stars.map(d => ({link: [d.name, d.repo_url], ...d})), {
   columns: [
     "link",
     "gh_stars",
@@ -56,35 +56,19 @@ Inputs.table(search_all_projects_with_stars.map(d => ({link: [d.name, d.homepage
 ## Search projects by their category
 In this section we can search a project by the category/subcategory it belongs to.
 
+Here is the list of all "Category > subcategory" grouped by the number of projects they have.
+
 ```sql id=categories_with_gh_stars display
-select concat(category, ' > ', subcategory) as category, count(*) as items
+select concat(category, ' > ', subcategory) as category, count(*) as projects
 from landscape
 where gh_stars > 0
 group by 1
 order by 2 desc
 ```
 
-```js
-Plot.plot({
-  marginLeft: 350,
-  x: {
-    grid: true,
-    label: "Number of Items"
-  },
-  y: {
-    label: null
-  },
-  marks: [
-    Plot.barX(categories_with_gh_stars, {
-      y: "category",
-      x: "items",
-      sort: {y: "-x"},
-      fill: "steelblue",
-    }),
-    Plot.tip(categories_with_gh_stars, Plot.pointerX({x: "items", y: "category"}))
-  ]
-})
-```
+Filter all projects by their "Category > subcategory".
+
+Type below the category/subcategory to start your search.
 
 ```js 
 const chosenCategory = view(
@@ -99,7 +83,7 @@ const chosenCategory = view(
 ```sql id=projects_with_chosen_category
 SELECT 
   name, 
-  homepage_url,
+  repo_url,
   gh_stars, 
   category || ' > ' || subcategory as category
   FROM landscape 
@@ -109,7 +93,7 @@ SELECT
 ```
 
 ```js 
-Inputs.table(Array.from(projects_with_chosen_category).map(d => ({link: [d.name, d.homepage_url], ...d})), {
+Inputs.table(Array.from(projects_with_chosen_category).map(d => ({link: [d.name, d.repo_url], ...d})), {
   columns: [
     "link",
     "gh_stars",
